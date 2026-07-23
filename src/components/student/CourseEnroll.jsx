@@ -45,14 +45,13 @@ const CourseEnroll = (props) => {
   // allow student to add course
   const addSection = async (sectionNo) => {
     try {
-      const response = await fetch(`${REGISTRAR_URL}/enrollments`,
+      const response = await fetch(`${REGISTRAR_URL}/enrollments/sections/${sectionNo}`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': sessionStorage.getItem('jwt'),
           },
-          body: JSON.stringify({sectionNo}),
         }
       );
 
@@ -105,18 +104,18 @@ const CourseEnroll = (props) => {
 
         <tbody>
           {sections.map((s) => (
-            <tr key = {s.sectionNo}>
-              <td>{s.sectionNo}</td>
+            <tr key = {s.secNo}>
+              <td>{s.secNo}</td>
               <td>{s.year}</td>
               <td>{s.semester}</td>
               <td>{s.courseId}</td>
-              <td>{s.sectionId}</td>
+              <td>{s.secId}</td>
               <td>{s.title}</td>
               <td>{s.building}</td>
               <td>{s.room}</td>
               <td>{s.times}</td>
-              <td>{s.instructorEmail}</td>
-              <td><button onClick = {() => onAdd(s.sectionNo)}>Add</button></td>
+              <td>{s.instructorName}</td>
+              <td><button onClick = {() => onAdd(s.secNo)}>Add</button></td>
             </tr>
           ))}
         </tbody>
