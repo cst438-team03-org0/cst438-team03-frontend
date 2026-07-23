@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { REGISTRAR_URL } from '../../Constants';
 import Messages from '../Messages';
+import SelectTerm from '../SelectTerm';
 
 
 const Transcript = () => {
@@ -8,7 +9,7 @@ const Transcript = () => {
   const [message, setMessage] = useState('');
   const [courses, setCourses] = useState([]);
 
-  const fetchData = async () => {
+  const fetchData = async (term) => {
 
     // allows user to filter by term
     const {year, semester} = term || {};
@@ -25,7 +26,7 @@ const Transcript = () => {
     const query = params.toString();
 
     try {
-      const response = await fetch(`${REGISTRAR_URL}/transcripts`,
+      const response = await fetch(`${REGISTRAR_URL}/transcripts${query ? `?${query}` : ''}`,
         {
           method: 'GET',
           headers: {
@@ -63,9 +64,9 @@ const Transcript = () => {
       <h3>Transcript</h3>
       <Messages response = {message}/>
 
-      <SelectTerm buttonTest = "Filter by Term" onClick = {fetchData}/>
+      <SelectTerm buttonText = "Filter by Term" onClick = {fetchData}/>
       
-      {/*Prevents fetching error if no term entered for filtering*/}
+      {/*resets filter for full transcript with no terms entered*/}
       <button onClick = {() => fetchData()}>Show ALL Terms</button>
 
       <table className = "Center">
