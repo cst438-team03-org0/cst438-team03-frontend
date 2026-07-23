@@ -27,11 +27,13 @@ const CourseEnroll = (props) => {
         const data = await response.json();
         setSections(data);
         setMessage('');
-      } else {
+      } 
+      else {
         const body = await response.json();
         setMessage(body);
       }
-    } catch (err) {
+    } 
+    catch (err) {
       setMessage(err);
     }
   }
@@ -40,7 +42,51 @@ const CourseEnroll = (props) => {
     fetchSections();
   }, []);
 
+  // allow student to add course
+  const addSection = async (sectionNo) => {
+    try {
+      const response = await fetch(`${REGISTRAR_URL}/enrollments`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': sessionStorage.getItem('jwt'),
+          },
+          body: JSON.stringify({sectionNo}),
+        }
+      );
 
+      if (response.ok) {
+        setMessage('Course added');
+        fetchSections();
+      }
+      else {
+        const body = await response.json();
+        setMessage(body);
+      }
+    }
+    catch (err) {
+      setMessage(err);
+    }
+  }
+
+  //confirm that student wants to add
+  const onAdd = (sectionNo) => {
+    confirmAlert({
+      title: 'Confirm to add',
+      message: 'Do you want to add this course?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => addSection(sectionNo),
+        },
+
+        {
+          label: 'No',
+        },
+      ],
+    });
+  };
 
   const headers = ['section No', 'year', 'semester', 'course Id', 'section', 'title', 'building', 'room', 'times', 'instructor', ''];
 
@@ -48,10 +94,33 @@ const CourseEnroll = (props) => {
     <div>
       <Messages response={message} />
       <h3>Open Sections Available for Enrollment</h3>
-      <p>To be implemented. Display a table of sections that are open for enrollment with columns in headers.
-        The last column is an "Add" button that when clicked will first confirm that user want to add
-        the course, then adds the course to the students schedule.
-      </p>
+      <table className = "Center">
+        <thead>
+          <tr>
+            {headers.map((h, idx) => (
+              <th key = {idx} > {h}</th>
+            ))}
+          </tr>
+        </thead>
+
+        <tbody>
+          {sections.map((s) => (
+            <tr key = {s.sectionNo}>
+              <td>{s.sectionNo}</td>
+              <td>{s.year}</td>
+              <td>{s.semester}</td>
+              <td>{s.courseId}</td>
+              <td>{s.sectionId}</td>
+              <td>{s.title}</td>
+              <td>{s.building}</td>
+              <td>{s.room}</td>
+              <td>{s.times}</td>
+              <td>{s.instructorEmail}</td>
+              <td><button onClick = {() => onAdd(s.sectionNo)}>Add</button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
     </div>
   );
