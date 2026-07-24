@@ -15,19 +15,63 @@ const AssignmentAdd = ({ onClose, secNo }) => {
     setMessage('');
     setAssignment({ ...assignment, secNo: secNo, title: '', dueDate: '' });
     // to be implemented.  invoke showModal() method on the dialog element.
-    // dialogRef.current.showModal();
+    dialogRef.current.showModal();
   };
 
+  const closeDialog = () => {
+    if(dialogRef.current) {
+      dialogRef.current.close();
+    }
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const saveAssignment = async () => {
+    if (!assignment.title || !assignment.dueDate) {
+      setMessage('Please provide both title and due date');
+      return;
+    }
+    try {
+      const response = await fetch(`${GRADEBOOK_URL}/assignments`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', 
+            'Authorization': sessionStorage.getItem('jwt'),
+          },
+          body: JSON.stringify(assignment),
+        }
+      );
+      if (response.ok) {
+        setMessage('Assignment added successfully');
+        closeDialog();
+      } else {
+        const body = await response.json();
+        setMessage(body.message || JSON.stringify(body));
+      } 
+    } catch (err) {
+      setMessage(err.toString());
+    } 
+  };
   return (
     <>
       <button id="addAssignmentButton" onClick={editOpen}>Add Assignment</button>
       <dialog ref={dialogRef} >
         <h2>Add Assignment</h2>
         <Messages response={message} />
-        <p>To be implemented. Prompt for title, due. With buttons for Close and Save.</p>
+        <label>Title: </label>
+        <input type="text" value={assignment.title} onChange={(e) => setAssignment({ ...assignment, title: e.target.value })} />
+        <br />
+        <div> 
+          <label>Due Date: </label>
+          <input type="date" value={assignment.dueDate} onChange={(e) => setAssignment({ ...assignment, dueDate: e.target.value })} />  
+          <button onClick={closeDialog}>Close</button>
+          <button onClick={saveAssignment}>Save</button>
+        </div>
       </dialog>
     </>
-  )
-}
+  );
+};
 
 export default AssignmentAdd;
