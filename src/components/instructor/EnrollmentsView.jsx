@@ -38,7 +38,38 @@ const EnrollmentsView = () => {
     fetchEnrollments()
   }, []);
 
+  const handleGradeChange = (grade, enrollmentId) => {
+    const updatedEnrollments = enrollments.map((e) => {
+      if (e.enrollmentId === enrollmentId) {
+        return { ...e, grade: grade };
+      }
+      return e;
+    });
+    setEnrollments(updatedEnrollments);
+  };
 
+  const saveGrades = async () => {
+    try {
+      const response = await fetch(`${GRADEBOOK_URL}/enrollments`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': sessionStorage.getItem('jwt'),
+          },
+          body: JSON.stringify(enrollments),
+        }
+      );
+      if (response.ok) {
+        setMessage('Grades saved');
+      } else {
+        const body = await response.json();
+        setMessage(body);
+      }
+    } catch (err) {
+      setMessage(err);
+    }
+  };
 
   const headers = ['enrollment id', 'student id', 'name', 'email', 'grade'];
 
@@ -46,9 +77,37 @@ const EnrollmentsView = () => {
     <>
       <h3> {courseId}-{secId} Enrollments</h3>
       <Messages response={message} />
-      <p>To be implemented. Display table with column headers as given in headers.
-        Allow user to edit the grade.  One button to Save all grades.
-      </p>
+
+      <table className="Center">
+        <thead>
+          <tr>
+            {headers.map((header, index) => (
+              <th key={index}>{header}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {enrollments.map((e) => (
+            <tr key={e.enrollmentId}>
+              <td>{e.enrollmentId}</td>
+              <td>{e.studentId}</td>
+              <td>{e.name}</td>
+              <td>{e.email}</td>
+              <td>
+                <input
+                  type="text"
+                  value={e.grade ?? ""}
+                  onChange={(event) => handleGradeChange(event.target.value, e.enrollmentId)}
+                  />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="Center">
+        <button onClick={saveGrades}>Save Grades</button>
+      </div>
     </>
   );
 }
