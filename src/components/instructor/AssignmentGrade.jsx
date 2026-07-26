@@ -95,7 +95,6 @@ const AssignmentGrade = ({ assignment, onClose }) => {
                 <th>Student</th>
                 <th>Email</th>
                 <th>Score</th>
-                <th>Save</th>
               </tr>
             </thead>
 
