@@ -77,8 +77,13 @@ const InstructorSectionsView = () => {
               <td>{section.times}</td>
               <td>
               <Link to="/assignments" state={section}>
-                  Assignments
-                </Link>
+                Assignments
+              </Link>
+
+              &nbsp;|&nbsp;
+              <Link to="/enrollments" state={section}>
+                Enrollments
+              </Link>
               </td>
             </tr>
           ))}
