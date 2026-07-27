@@ -7,7 +7,7 @@ const EnrollmentsView = () => {
 
   const [enrollments, setEnrollments] = useState([]);
   const [message, setMessage] = useState('');
-  const [editedEnrollments, setEditedEnrollments] = useState();
+  const [editedEnrollments, setEditedEnrollments] = useState([]);
  
   const location = useLocation();
   const { secNo, courseId, secId } = location.state;
@@ -39,23 +39,6 @@ const EnrollmentsView = () => {
     fetchEnrollments()
   }, []);
 
-  setEditedEnrollments((prev) => {
-    const updatedEnrollment = updatedEnrollments.find(
-      (e) => e.enrollmentId === enrollmentId
-    );
-    
-    const exists = prev.some(
-      (e) => e.enrollmentId === enrollmentId
-    );
-
-    if(exists) {
-      return prev.map((e) =>
-      e.enrollmentId === enrollmentId ? updatedEnrollment : e
-    );
-    }
-    return [...prev, updatedEnrollment];
-  })
-
   const handleGradeChange = (grade, enrollmentId) => {
     const updatedEnrollments = enrollments.map((e) => {
       if (e.enrollmentId === enrollmentId) {
@@ -64,6 +47,23 @@ const EnrollmentsView = () => {
       return e;
     });
     setEnrollments(updatedEnrollments);
+
+    setEditedEnrollments((prev) => {
+      const updatedEnrollment = updatedEnrollments.find(
+        (e) => e.enrollmentId === enrollmentId
+      );
+  
+      const exists = prev.some(
+        (e) => e.enrollmentId === enrollmentId
+      );
+
+      if(exists) {
+        return prev.map((e) =>
+          e.enrollmentId === enrollmentId ? updatedEnrollment : e
+        );
+      }
+      return [...prev, updatedEnrollment];
+    })
   };
 
   const saveGrades = async () => {
