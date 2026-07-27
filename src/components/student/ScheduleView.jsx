@@ -85,7 +85,7 @@ const ScheduleView = () => {
     });
   };
 
-  const headings = ["enrollmentId", "secNo", "courseId", "secId", "building", "room", "times", ""];
+  const headings = ["enrollmentId", "sectionNo", "courseId", "sectionId", "building", "room", "times", ""];
 
   return (
     <div>
