@@ -7,7 +7,8 @@ const EnrollmentsView = () => {
 
   const [enrollments, setEnrollments] = useState([]);
   const [message, setMessage] = useState('');
-
+  const [editedEnrollments, setEditedEnrollments] = useState();
+ 
   const location = useLocation();
   const { secNo, courseId, secId } = location.state;
 
@@ -38,10 +39,27 @@ const EnrollmentsView = () => {
     fetchEnrollments()
   }, []);
 
+  setEditedEnrollments((prev) => {
+    const updatedEnrollment = updatedEnrollments.find(
+      (e) => e.enrollmentId === enrollmentId
+    );
+    
+    const exists = prev.some(
+      (e) => e.enrollmentId === enrollmentId
+    );
+
+    if(exists) {
+      return prev.map((e) =>
+      e.enrollmentId === enrollmentId ? updatedEnrollment : e
+    );
+    }
+    return [...prev, updatedEnrollment];
+  })
+
   const handleGradeChange = (grade, enrollmentId) => {
     const updatedEnrollments = enrollments.map((e) => {
       if (e.enrollmentId === enrollmentId) {
-        return { ...e, grade: grade };
+        return { ...e, grade: grade === "" ? null : grade };
       }
       return e;
     });
@@ -57,11 +75,12 @@ const EnrollmentsView = () => {
             'Content-Type': 'application/json',
             'Authorization': sessionStorage.getItem('jwt'),
           },
-          body: JSON.stringify(enrollments),
+          body: JSON.stringify(editedEnrollments),
         }
       );
       if (response.ok) {
         setMessage('Grades saved');
+        setEditedEnrollments([]);
       } else {
         const body = await response.json();
         setMessage(body);
@@ -96,6 +115,7 @@ const EnrollmentsView = () => {
               <td>
                 <input
                   type="text"
+                  placeholder="A, B+, C-"
                   value={e.grade ?? ""}
                   onChange={(event) => handleGradeChange(event.target.value, e.enrollmentId)}
                   />
