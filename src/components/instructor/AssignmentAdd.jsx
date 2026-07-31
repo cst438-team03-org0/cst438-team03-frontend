@@ -61,13 +61,13 @@ const AssignmentAdd = ({ onClose, secNo }) => {
         <h2>Add Assignment</h2>
         <Messages response={message} />
         <label>Title: </label>
-        <input type="text" value={assignment.title} onChange={(e) => setAssignment({ ...assignment, title: e.target.value })} />
+        <input id="titleInput" type="text" value={assignment.title} onChange={(e) => setAssignment({ ...assignment, title: e.target.value })} />
         <br />
         <div> 
           <label>Due Date: </label>
-          <input type="date" value={assignment.dueDate} onChange={(e) => setAssignment({ ...assignment, dueDate: e.target.value })} />  
-          <button onClick={closeDialog}>Close</button>
-          <button onClick={saveAssignment}>Save</button>
+          <input id="dueDateInput" type="date" value={assignment.dueDate} onChange={(e) => setAssignment({ ...assignment, dueDate: e.target.value })} />
+          <button id="closeButton" onClick={closeDialog}>Close</button>
+          <button id="saveButton" onClick={saveAssignment}>Save</button>
         </div>
       </dialog>
     </>
