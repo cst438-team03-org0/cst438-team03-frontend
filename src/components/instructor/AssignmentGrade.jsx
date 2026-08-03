@@ -107,7 +107,7 @@ const AssignmentGrade = ({ assignment, onClose }) => {
                 <td>{grade.studentName}</td>
                 <td>{grade.studentEmail}</td>
                 <td>
-                  <input type="number" min="0" max ="100" value={grade.score ?? ''}
+                  <input id={`scoreInput-${index}`} type="number" min="0" max ="100" value={grade.score ?? ''}
                   onChange={(e) => handleScoreChange(e.target.value, index)} />
                 </td>
               </tr>
@@ -116,8 +116,8 @@ const AssignmentGrade = ({ assignment, onClose }) => {
         </table>
         
         <div>
-          <button onClick = {saveGrades}>Save</button>
-          <button onClick = {editClose}>Close</button>
+          <button id="saveGradesButton" onClick = {saveGrades}>Save</button>
+          <button id="closeGradesButton" onClick = {editClose}>Close</button>
         </div>
       </dialog>
     </>

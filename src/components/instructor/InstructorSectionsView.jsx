@@ -45,15 +45,21 @@ const InstructorSectionsView = () => {
    
       <div className="Center">
 
-      <h2> Instructor Sections</h2>
-      <input value={year} onChange={(e) => setYear(e.target.value)} placeholder="Year" />
-      <select value={semester} onChange={(e) => setSemester(e.target.value)}>
+      <h2>Instructor Sections</h2>
+      <input 
+      id="yearInput"
+      value={year} onChange={(e) => setYear(e.target.value)} placeholder="Year" />
+      <select
+       id="semesterSelect"
+       value={semester} onChange={(e) => setSemester(e.target.value)}>
         <option value="">Select Semester</option>
         <option value="Spring">Spring</option>
         <option value="Summer">Summer</option>
         <option value="Fall">Fall</option>
       </select>
-      <button onClick={() => fetchSections({ year, semester })}>Fetch Sections</button> 
+      <button 
+      id="fetchSectionsButton"
+      onClick={() => fetchSections({ year, semester })}>Fetch Sections</button> 
 <table border="1">
         <thead>
           <tr>
