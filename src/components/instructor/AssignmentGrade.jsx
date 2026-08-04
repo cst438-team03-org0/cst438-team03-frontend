@@ -6,18 +6,21 @@ const AssignmentGrade = ({ assignment, onClose }) => {
 
   const [message, setMessage] = useState('');
   const [grades, setGrades] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   const dialogRef = useRef();
 
 
   const editOpen = () => {
     setMessage('');
     setGrades([]);
+    setIsOpen(true);
     fetchGrades(assignment.id);
     // to be implemented.  invoke showModal() method on the dialog element.
     dialogRef.current.showModal();
   };
 
   const editClose = () => {
+    setIsOpen(false);
     dialogRef.current.close();
   };
 
@@ -115,10 +118,12 @@ const AssignmentGrade = ({ assignment, onClose }) => {
           </tbody>
         </table>
         
-        <div>
-          <button id="saveGradesButton" onClick = {saveGrades}>Save</button>
-          <button id="closeGradesButton" onClick = {editClose}>Close</button>
-        </div>
+ {isOpen && (
+          <div>
+            <button id="saveGradesButton" onClick={saveGrades}>Save</button>
+            <button id="closeGradesButton" onClick={editClose}>Close</button>
+          </div>
+        )}
       </dialog>
     </>
   );
