@@ -6,18 +6,21 @@ const AssignmentGrade = ({ assignment, onClose }) => {
 
   const [message, setMessage] = useState('');
   const [grades, setGrades] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   const dialogRef = useRef();
 
 
   const editOpen = () => {
     setMessage('');
     setGrades([]);
+    setIsOpen(true);
     fetchGrades(assignment.id);
     // to be implemented.  invoke showModal() method on the dialog element.
     dialogRef.current.showModal();
   };
 
   const editClose = () => {
+    setIsOpen(false);
     dialogRef.current.close();
   };
 
@@ -107,7 +110,7 @@ const AssignmentGrade = ({ assignment, onClose }) => {
                 <td>{grade.studentName}</td>
                 <td>{grade.studentEmail}</td>
                 <td>
-                  <input type="number" min="0" max ="100" value={grade.score ?? ''}
+                  <input id={`scoreInput-${index}`} type="number" min="0" max ="100" value={grade.score ?? ''}
                   onChange={(e) => handleScoreChange(e.target.value, index)} />
                 </td>
               </tr>
@@ -115,10 +118,12 @@ const AssignmentGrade = ({ assignment, onClose }) => {
           </tbody>
         </table>
         
-        <div>
-          <button onClick = {saveGrades}>Save</button>
-          <button onClick = {editClose}>Close</button>
-        </div>
+ {isOpen && (
+          <div>
+            <button id="saveGradesButton" onClick={saveGrades}>Save</button>
+            <button id="closeGradesButton" onClick={editClose}>Close</button>
+          </div>
+        )}
       </dialog>
     </>
   );
